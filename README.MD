@@ -20,6 +20,8 @@ heroku config:set SECRET=secret-key
 Then create a new peer id by running the script `create_id`
 
 ```bash
+// first install deps
+yarn
 node create_id.js
 ```
 
@@ -32,7 +34,7 @@ At this point the app is almost ready to be deployed. Add the app name to the en
 ```bash
 git add . 
 git commit -m "Deploy"
-heroku config:set APPNAME=my-app-name
+heroku config:set APPNAME=my-ws-node-app
 git push heroku master
 ```
 
@@ -44,7 +46,7 @@ The node is dialable at the multi-address
 
 ```javascript
 //From a browser node:
-this.ipfs.swarm.connect("/dns4/app-name.herokuapp.com/tcp/443/wss/p2p/peer-id")
+this.ipfs.swarm.connect("/dns4/my-ws-node-app.herokuapp.com/tcp/443/wss/p2p/peer-id")
 this.ipfs.swarm.peers().then((value)=>{console.log(value)}) 
 //you should be able to find your node among the peers 
 ```
