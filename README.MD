@@ -2,11 +2,16 @@
 
 Create a new heroku application and configure the app name in the environmental variables
 
-and a secret key which will be used to encrypt and decrypt the ipfs node peer-id
+and a secret key which will be used to encrypt and decrypt the ipfs node private key.
 
 ```
-heroku config:set APPNAME=my-app-name
+SECRET=secret-key
+
+export SECRET="$SECRET"
+
 heroku config:set SECRET=secret-key
+
+heroku config:set APPNAME=my-app-name
 ```
 
 > the secret key must be a string of 32 characters
@@ -14,7 +19,7 @@ heroku config:set SECRET=secret-key
 Then create a new peer id
 
 ```
-node createHerokuId 
+node create_id.js
 ```
 
 The script will produce the file `encrypted_key` and will log the node peer id to the console.  
