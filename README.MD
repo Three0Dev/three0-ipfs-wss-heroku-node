@@ -1,44 +1,79 @@
-# Websocket Secure Ipfs node on Heroku
+# Wss Ipfs node on Heroku
 
-Create a new heroku application and configure the app name in the environmental variables
+Clone this repository and create a new Heroku app using the CLI
 
-and a secret key which will be used to encrypt and decrypt the ipfs node private key.
-
+```bash
+heroku apps:create my-ws-node-app
+heroku git:remote -a my-ws-node-app
 ```
+
+## Create a persistent peer-id 
+
+Create a secret-key of 32 characters and export it to the environmental variables
+
+```bash
 SECRET=secret-key
-
 export SECRET="$SECRET"
-
 heroku config:set SECRET=secret-key
-
-heroku config:set APPNAME=my-app-name
 ```
 
-> the secret key must be a string of 32 characters
+Then create a new peer id by running the script `create_id`
 
-Then create a new peer id
-
-```
+```bash
 node create_id.js
 ```
 
 The script will produce the file `encrypted_key` and will log the node peer id to the console.  
 
-At this point the app is ready to be deployed. The node is dialable at the multiaddress 
+## Deploy
 
-`/dns4/app-name.herokuapp.com/tcp/443/wss/p2p/peer-id`
+At this point the app is almost ready to be deployed. Add the app name to the environmental variables and deploy
+
+```bash
+git add . 
+git commit -m "Deploy"
+heroku config:set APPNAME=my-app-name
+git push heroku master
+```
+
+## Connect to the node
+
+The node is dialable at the multi-address 
+
+`/dns4/my-ws-node-app.herokuapp.com/tcp/443/wss/p2p/peer-id`
 
 ```javascript
 //From a browser node:
-ipfs.node.swarm.connect("/dns4/app-name.herokuapp.com/tcp/443/wss/p2p/peer-id")
-ipfs.swarm.peers().then((value)=>{console.log(value)}) 
+this.ipfs.swarm.connect("/dns4/app-name.herokuapp.com/tcp/443/wss/p2p/peer-id")
+this.ipfs.swarm.peers().then((value)=>{console.log(value)}) 
 //you should be able to find your node among the peers 
 ```
 
+## Pubsub 
 
+The node subscribes to the Pubsub channel `publicRoom` and welcome new peers with a message. 
 
+From a browser node:
 
-
-
-
- 
+```js
+const room = require('ipfs-pubsub-room')
+...
+this.Id = await this.ipfs.id()
+this.peerId = this.Id.id
+this.publicRoom = new room(this.ipfs, 'publicRoom')
+this.publicRoom.on('peer joined', (peer) => {
+  console.log('Peer joined the room', peer)
+  this.publicRoom.broadcast('hello from browser node ' + this.peerId)
+})
+this.publicRoom.on('message', (message) => {
+  console.log('message:', message.data.toString())
+})
+this.publicRoom.on('peer left', (peer) => {
+  console.log('Peer left...', peer)
+})
+// now started to listen to room
+this.publicRoom.on('subscribed', () => {
+  console.log('Now connected!')
+})
+this.publicRoom.broadcast('Hello from hello from browser node ' + this.peerId)
+```
