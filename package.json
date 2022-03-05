@@ -1,0 +1,22 @@
+{
+  "name": "heroku-wss-ipfs-node",
+  "version": "1.0.0",
+  "description": "Wss ipfs node heroku",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@libp2p/websockets": "^1.0.2",
+    "ipfs": "^0.62.1",
+    "ipfs-pubsub-room": "^2.0.1",
+    "libp2p-webrtc-star": "^0.25.0",
+    "peer-id": "^0.16.0",
+    "wrtc": "^0.4.7"
+  },
+  "engines": {
+    "node": "16.x"
+  }
+}
