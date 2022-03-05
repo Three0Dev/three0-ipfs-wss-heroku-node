@@ -59,11 +59,13 @@ class App {
       }
     })
     this.Id = await this.node.id()
+    this.peerId = this.Id.id
+    console.log(this.peerId)
 
     this.publicRoom = new room(this.node, 'publicRoom')
     this.publicRoom.on('peer joined', (peer) => {
       console.log('Peer joined the room', peer)
-      this.publicRoom.broadcast('hello from HEROKU wss node ' + this.Id.id)
+      this.publicRoom.broadcast('hello from HEROKU wss node ' + this.peerId)
     })
     this.publicRoom.on('message', (message) => {
       console.log('message:', message.data.toString())
@@ -78,7 +80,7 @@ class App {
       console.log('Now connected!')
     })
 
-    this.publicRoom.broadcast('Hello from HEROKU wss node with id ' + + this.Id.id)
+    this.publicRoom.broadcast('Hello from HEROKU wss node with id ' + this.peerId)
   }
 
 }
@@ -87,12 +89,12 @@ WSSNode = new App(ipfs)
 
 var instance
 
-function init () {
+function init() {
   console.log("Server is running...")
   instancePromise = WSSNode.create()
   instancePromise.then((value) => {
-  console.log('Node running and listening at ' + swarmAddress);
-})
+    console.log('Node running and listening at ' + swarmAddress);
+  })
 }
 
 init()
