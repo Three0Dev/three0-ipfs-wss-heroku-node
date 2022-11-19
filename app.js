@@ -7,7 +7,7 @@ const filters = require('libp2p-websockets/src/filters')
 const transportKey = Websockets.prototype[Symbol.toStringTag]
 const Utils = require("./utils.js")
 const appName = process.env.APPNAME
-const swarmAddress = "/dns4/" + appName + ".herokuapp.com/tcp/" + process.env.PORT + "/wss/"
+const swarmAddress = "/dns4/" + appName + "/tcp/" + process.env.PORT + "/wss/"
 
 class App {
   constructor(Ipfs) {

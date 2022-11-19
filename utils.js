@@ -7,7 +7,7 @@ const secretKey = process.env.SECRET;
 const PeerId = require('peer-id')
 
 const encrypt = (text) => {
-  const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
+  const cipher = crypto.createCipheriv(algorithm, Buffer.from(secretKey), iv);
   const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
   return {
     iv: iv.toString('hex'),
